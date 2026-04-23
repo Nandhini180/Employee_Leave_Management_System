@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  adminer:
+    build:
+      context: ./adminer
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./db.sqlite3:/var/lib/sqlite/db.sqlite3
+    environment:
+      ADMINER_LOGIN_PASSWORD: sqlite
+    depends_on:
+      - web
