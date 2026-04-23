@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}LeaveHub{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}?v=20260423-2">
+</head>
+<body>
+    <div class="shell-bg"></div>
+    <div class="ambient-orb ambient-orb-one"></div>
+    <div class="ambient-orb ambient-orb-two"></div>
+    {% if request.user.is_authenticated %}
+    <div class="workspace-shell">
+        <aside class="sidebar">
+            <a href="{% url 'dashboard' %}" class="brand brand-sidebar">
+                <span class="brand-mark">LH</span>
+                <span class="brand-copy">
+                    <strong>LeaveHub</strong>
+                    <small>Leave Operations Console</small>
+                </span>
+            </a>
+            <div class="sidebar-section">
+                <span class="sidebar-label">Workspace</span>
+                <nav class="sidebar-nav">
+                    <a href="{% url 'dashboard' %}#overview" class="sidebar-link">Overview</a>
+                    <a href="{% url 'dashboard' %}#apply-panel" class="sidebar-link">Apply Leave</a>
+                    <a href="{% url 'dashboard' %}#requests-panel" class="sidebar-link">My Requests</a>
+                    <a href="{% url 'team_calendar' %}" class="sidebar-link">Team Calendar</a>
+                    <a href="{% url 'dashboard' %}#balances-panel" class="sidebar-link">Balances</a>
+                    <a href="{% url 'dashboard' %}#approvals-panel" class="sidebar-link">Approvals</a>
+                    <a href="/admin/" class="sidebar-link">Django Admin</a>
+                </nav>
+            </div>
+            <div class="sidebar-section sidebar-note">
+                <span class="sidebar-label">Platform</span>
+                <p>Built to demo balance checks, approvals, cancellations, and holiday-aware day counting in one place.</p>
+            </div>
+        </aside>
+        <div class="workspace-main">
+            <header class="site-header">
+                <div class="header-copy">
+                    <p class="eyebrow">Secure company workspace</p>
+                    <h2>Employee leave management</h2>
+                </div>
+                <nav class="top-nav">
+                    <a href="/admin/" class="btn btn-ghost">Open Admin</a>
+                    <div class="nav-status">
+                        <span class="status-dot"></span>
+                        <span>Workflow live</span>
+                    </div>
+                    <span class="nav-user">
+                        <strong>{{ request.user.first_name|default:request.user.username }}</strong>
+                        <small>Authenticated session</small>
+                    </span>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-secondary" type="submit">Logout</button>
+                    </form>
+                </nav>
+            </header>
+    {% else %}
+    <header class="site-header site-header-public">
+        <a href="{% url 'dashboard' %}" class="brand">
+            <span class="brand-mark">LH</span>
+            <span class="brand-copy">
+                <strong>LeaveHub</strong>
+                <small>Enterprise Leave Operations Console</small>
+            </span>
+        </a>
+    </header>
+    {% endif %}
+    <main class="page-shell">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <div>
+            <strong>LeaveHub</strong>
+            <span>Professional leave operations for employees, managers, and HR teams.</span>
+        </div>
+        <span>Built with Django, DRF, and SQLite</span>
+    </footer>
+    {% if request.user.is_authenticated %}
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>

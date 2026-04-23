@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Login | LeaveHub{% endblock %}
+
+{% block content %}
+<section class="login-shell">
+    <div class="login-layout">
+        <article class="login-showcase">
+            <p class="eyebrow">Enterprise HR Platform</p>
+            <h1>Built for confident leave planning across modern teams.</h1>
+            <p class="hero-copy">Give employees a clear request flow, give managers a fast approval workspace, and keep company leave data presentable for leadership and project reviewers.</p>
+            <div class="showcase-points">
+                <div class="showcase-point">
+                    <strong>Fast approvals</strong>
+                    <span>Department-specific decisions with balance-aware automation.</span>
+                </div>
+                <div class="showcase-point">
+                    <strong>Cleaner visibility</strong>
+                    <span>Structured balances, calendars, and request history in one place.</span>
+                </div>
+                <div class="showcase-point">
+                    <strong>Professional presentation</strong>
+                    <span>An internal tool that feels worthy of a real company environment.</span>
+                </div>
+            </div>
+        </article>
+        <article class="login-card">
+            <p class="eyebrow">Secure Access</p>
+            <h2>Sign in to LeaveHub</h2>
+            <p class="hero-copy">Use your Django account to access leave balances, workflows, approvals, and the operational dashboard.</p>
+            <form method="post" class="form-grid">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </article>
+    </div>
+</section>
+{% endblock %}
