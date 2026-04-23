@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block title %}LeaveHub Dashboard{% endblock %}
+
+{% block content %}
+<section class="hero hero-dashboard" id="overview">
+    <div class="hero-copy-wrap">
+        <p class="eyebrow">Operations dashboard</p>
+        <h1>Leave workflows shaped like a real internal admin panel.</h1>
+        <p class="hero-copy">Employees can request leave, managers can review only their own department, and balance usage stays visible without leaving the workspace.</p>
+        <div class="hero-banner">
+            <span class="hero-banner-label">Today</span>
+            <span>{{ today }} | Weekend and holiday exclusions are applied automatically when requests are calculated.</span>
+        </div>
+        <div class="hero-actions">
+            <a href="#apply-panel" class="btn btn-primary">Apply for Leave</a>
+            <a href="#requests-panel" class="btn btn-secondary">My Requests</a>
+            {% if employee.is_manager or request.user.is_superuser %}
+            <a href="#approvals-panel" class="btn btn-ghost">Pending Approvals</a>
+            {% else %}
+            <a href="{% url 'team_calendar' %}" class="btn btn-ghost">Team Calendar</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="hero-aside">
+        <div class="profile-card">
+            <div class="profile-card-head">
+                {% if employee.photo %}
+                <img src="{{ employee.photo.url }}" alt="{{ employee.user.get_full_name|default:employee.user.username }}" class="profile-avatar-image">
+                {% elif employee.photo_url %}
+                <img src="{{ employee.photo_url }}" alt="{{ employee.user.get_full_name|default:employee.user.username }}" class="profile-avatar-image">
+                {% else %}
+                <span class="profile-avatar">
+                    {{ employee.user.first_name|default:employee.user.username|slice:":1"|upper }}
+                </span>
+                {% endif %}
+                <div>
+                    <strong>{{ employee.user.get_full_name|default:employee.user.username }}</strong>
+                    <p>{{ employee.designation }}</p>
+                </div>
+            </div>
+            <div class="profile-meta">
+                <div>
+                    <span class="mini-label">Role</span>
+                    <strong>{% if employee.is_manager %}Manager{% else %}Employee{% endif %}</strong>
+                </div>
+                <div>
+                    <span class="mini-label">Department</span>
+                    <strong>{{ employee.department.name|default:"Unassigned" }}</strong>
+                </div>
+                <div>
+                    <span class="mini-label">Joined</span>
+                    <strong>{{ employee.date_of_joining }}</strong>
+                </div>
+            </div>
+        </div>
+        <div class="hero-brief">
+            <span class="mini-label">Policy guardrails</span>
+            <ul class="hero-checks">
+                <li>Requests validate dates, working days, leave balance, and overlapping approved leave.</li>
+                <li>Approved cancellations restore balance only when the leave has not started yet.</li>
+                <li>Managers are restricted to pending requests from their own department.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card accent">
+        <span class="mini-label">Paid Leave Remaining</span>
+        <strong>{{ summary.available_days }}</strong>
+        <p>Combined remaining balance across paid leave types inside the current year.</p>
+    </article>
+    <article class="stat-card">
+        <span class="mini-label">My pending requests</span>
+        <strong>{{ summary.pending_count }}</strong>
+        <p>Requests currently waiting on a manager decision.</p>
+    </article>
+    <article class="stat-card">
+        <span class="mini-label">Approved requests</span>
+        <strong>{{ summary.approved_count }}</strong>
+        <p>Approved items already reflected in your leave history.</p>
+    </article>
+    <article class="stat-card">
+        <span class="mini-label">Department approvals</span>
+        <strong>{{ summary.team_pending_count }}</strong>
+        <p>Pending team items that require manager action.</p>
+    </article>
+</section>
+
+{% if messages %}
+<section class="flash-stack">
+    {% for message in messages %}
+    <div class="flash {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</section>
+{% endif %}
+
+{% if holiday_alerts %}
+<section class="holiday-alert-stack">
+    {% for alert in holiday_alerts %}
+    <article class="holiday-alert holiday-alert-{{ alert.level }}">
+        <span class="holiday-alert-label">{{ alert.title }}</span>
+        <p>{{ alert.message }}</p>
+    </article>
+    {% endfor %}
+</section>
+{% endif %}
+
+<section class="team-strip">
+    <article class="team-highlight">
+        <div class="team-highlight-copy">
+            <span class="mini-label">Department workspace</span>
+            <h2>{{ employee.department.name|default:"Unassigned team" }}</h2>
+            <p>Use this screen as the operational hub for balances, submissions, approvals, and schedule awareness.</p>
+        </div>
+        <div class="team-members">
+            <div class="member-card member-card-active">
+                {% if employee.photo %}
+                <img src="{{ employee.photo.url }}" alt="{{ employee.user.get_full_name|default:employee.user.username }}" class="member-avatar-image">
+                {% elif employee.photo_url %}
+                <img src="{{ employee.photo_url }}" alt="{{ employee.user.get_full_name|default:employee.user.username }}" class="member-avatar-image">
+                {% else %}
+                <div class="member-avatar">
+                    {{ employee.user.first_name|default:employee.user.username|slice:":1"|upper }}
+                </div>
+                {% endif %}
+                <strong>{{ employee.user.get_full_name|default:employee.user.username }}</strong>
+                <span>{{ employee.designation }}</span>
+                <small>{% if employee.is_manager or request.user.is_superuser %}Approver{% else %}Requester{% endif %}</small>
+            </div>
+            {% for item in pending_requests|slice:":3" %}
+            <div class="member-card">
+                {% if item.employee.photo %}
+                <img src="{{ item.employee.photo.url }}" alt="{{ item.employee.user.get_full_name|default:item.employee.user.username }}" class="member-avatar-image">
+                {% elif item.employee.photo_url %}
+                <img src="{{ item.employee.photo_url }}" alt="{{ item.employee.user.get_full_name|default:item.employee.user.username }}" class="member-avatar-image">
+                {% else %}
+                <div class="member-avatar member-avatar-soft">
+                    {{ item.employee.user.first_name|default:item.employee.user.username|slice:":1"|upper }}
+                </div>
+                {% endif %}
+                <strong>{{ item.employee.user.get_full_name|default:item.employee.user.username }}</strong>
+                <span>{{ item.employee.designation }}</span>
+                <small>{{ item.leave_type.name }} pending</small>
+            </div>
+            {% empty %}
+            <div class="member-card member-card-muted">
+                <div class="member-avatar member-avatar-soft">+</div>
+                <strong>Queue clear</strong>
+                <span>No pending approvals visible right now.</span>
+                <small>Managers will see requests here as they arrive.</small>
+            </div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+<section class="grid dashboard-grid">
+    <article class="panel panel-feature" id="apply-panel">
+        <div class="panel-head">
+            <h2>Apply for Leave</h2>
+            <p>Requests are checked against weekends, holidays, overlapping approvals, and your live leave balance before submission.</p>
+        </div>
+        <form method="post" action="{% url 'apply_leave' %}" class="form-grid">
+            {% csrf_token %}
+            {{ leave_form.as_p }}
+            <div class="panel-actions">
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+                <span class="form-note">Your manager will be notified after a valid request is created.</span>
+            </div>
+        </form>
+    </article>
+
+    <article class="panel panel-balance" id="balances-panel">
+        <div class="panel-head">
+            <h2>Leave Balances</h2>
+            <p>Allocation health by leave category for the current operating year.</p>
+        </div>
+        <div class="balance-list">
+            {% for balance in balances %}
+            <div class="balance-card">
+                <div class="balance-head">
+                    <div>
+                        <h3>{{ balance.leave_type.name }}</h3>
+                        <p>Allocation year {{ balance.year }}</p>
+                    </div>
+                    <span class="balance-chip">{{ balance.used_days }} used</span>
+                </div>
+                <div class="balance-bar">
+                    <span style="width: {% widthratio balance.used_days balance.allocated_days 100 %}%"></span>
+                </div>
+                <div class="balance-stats">
+                    <strong>{{ balance.remaining_days }}</strong>
+                    <span>remaining / {{ balance.allocated_days }} allocated</span>
+                </div>
+            </div>
+            {% empty %}
+            <p class="empty">No leave balances available yet. Run the yearly allocation command to initialize records.</p>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+<section class="grid two-up">
+    <article class="panel" id="requests-panel">
+        <div class="panel-head">
+            <h2>My Requests</h2>
+            <p>Every request, decision, and cancellation status in one operational record.</p>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Dates</th>
+                        <th>Days</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in own_requests %}
+                    <tr>
+                        <td>{{ item.leave_type.name }}</td>
+                        <td>{{ item.start_date }} to {{ item.end_date }}</td>
+                        <td>{{ item.num_days }}</td>
+                        <td><span class="pill pill-{{ item.status|lower }}">{{ item.status }}</span></td>
+                        <td>
+                            {% if item.status == "PENDING" or item.status == "APPROVED" and item.start_date > today %}
+                            <form method="post" action="{% url 'cancel_leave_web' item.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-secondary">Cancel</button>
+                            </form>
+                            {% else %}
+                            <span class="muted">No action</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="empty">No leave requests yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel" id="calendar-panel">
+        <div class="panel-head">
+            <h2>Team Calendar</h2>
+            <p>Forward-looking department schedule for approved absences.</p>
+        </div>
+        <div class="panel-actions panel-actions-inline">
+            <a href="{% url 'team_calendar' %}" class="btn btn-ghost">Open Full Calendar</a>
+        </div>
+        <div class="calendar-list">
+            {% if team_calendar %}
+                {% for label, items in team_calendar.items %}
+                <div class="calendar-group">
+                    <h3>{{ label }}</h3>
+                    {% for item in items %}
+                    <div class="calendar-item">
+                        <strong>{{ item.employee.user.get_full_name|default:item.employee.user.username }}</strong>
+                        <span>{{ item.leave_type.name }} | {{ item.start_date }} to {{ item.end_date }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            {% else %}
+            <p class="empty">No approved upcoming team leave to show.</p>
+            {% endif %}
+        </div>
+    </article>
+</section>
+
+{% if employee.is_manager or request.user.is_superuser %}
+<section class="panel panel-manager" id="approvals-panel">
+    <div class="panel-head">
+        <h2>Pending Approvals</h2>
+        <p>Review requests from your department with clear context, structured notes, and accountable decision handling.</p>
+    </div>
+    <div class="approval-grid">
+        {% for item in pending_requests %}
+        <div class="approval-card">
+            <div class="approval-summary">
+                <div class="approval-person">
+                    {% if item.employee.photo %}
+                    <img src="{{ item.employee.photo.url }}" alt="{{ item.employee.user.get_full_name|default:item.employee.user.username }}" class="avatar-image">
+                    {% elif item.employee.photo_url %}
+                    <img src="{{ item.employee.photo_url }}" alt="{{ item.employee.user.get_full_name|default:item.employee.user.username }}" class="avatar-image">
+                    {% else %}
+                    <span class="avatar-badge">{{ item.employee.user.first_name|default:item.employee.user.username|slice:":1"|upper }}</span>
+                    {% endif %}
+                    <div>
+                        <h3>{{ item.employee.user.get_full_name|default:item.employee.user.username }}</h3>
+                        <p>{{ item.employee.designation }}</p>
+                    </div>
+                </div>
+                <div class="approval-facts">
+                    <span>{{ item.leave_type.name }}</span>
+                    <span>{{ item.start_date }} to {{ item.end_date }}</span>
+                    <span>{{ item.num_days }} day(s)</span>
+                </div>
+                <p class="muted">{{ item.reason }}</p>
+            </div>
+            <div class="approval-actions">
+                <form method="post" action="{% url 'approve_leave_web' item.pk %}">
+                    {% csrf_token %}
+                    <textarea name="manager_note" rows="2" placeholder="Optional approval note"></textarea>
+                    <button type="submit" class="btn btn-primary">Approve</button>
+                </form>
+                <form method="post" action="{% url 'reject_leave_web' item.pk %}">
+                    {% csrf_token %}
+                    <textarea name="manager_note" rows="2" placeholder="Optional manager note"></textarea>
+                    <textarea name="rejection_reason" rows="2" placeholder="Rejection reason" required></textarea>
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <p class="empty">No pending requests right now.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

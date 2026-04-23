@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Setup Required | LeaveHub{% endblock %}
+
+{% block content %}
+<section class="login-shell">
+    <article class="login-card empty-state-card">
+        <p class="eyebrow">Setup Required</p>
+        <h1>Employee profile missing</h1>
+        <p class="hero-copy">
+            Your Django user is logged in, but it is not linked to an <strong>Employee</strong> record yet.
+            LeaveHub needs that profile to load the dashboard, balances, and approval workflow.
+        </p>
+        {% if is_admin_user %}
+        <p class="hero-copy">
+            Open <a href="/admin/">Django Admin</a>, create an <strong>Employee</strong> entry for this user, then reload this page.
+        </p>
+        {% else %}
+        <p class="hero-copy">
+            Please ask an administrator to create your employee profile in the Django admin panel.
+        </p>
+        {% endif %}
+        <div class="empty-actions">
+            <a href="/admin/" class="btn btn-primary">Open Admin</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-ghost">Sign Out</button>
+            </form>
+        </div>
+    </article>
+</section>
+{% endblock %}
