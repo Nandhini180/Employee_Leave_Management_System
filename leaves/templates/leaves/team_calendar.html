@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Team Calendar | LeaveHub{% endblock %}
+
+{% block content %}
+<section class="hero hero-dashboard">
+    <div class="hero-copy-wrap">
+        <p class="eyebrow">Team leave calendar</p>
+        <h1>{{ calendar_month|date:"F Y" }}</h1>
+        <p class="hero-copy">A simple monthly calendar showing approved team leave for your department{% if request.user.is_superuser %} and all departments{% endif %}.</p>
+        <div class="hero-actions">
+            <a href="{% url 'team_calendar' %}?year={{ prev_month.year }}&month={{ prev_month.month }}" class="btn btn-secondary">Previous Month</a>
+            <a href="{% url 'team_calendar' %}" class="btn btn-ghost">Current Month</a>
+            <a href="{% url 'team_calendar' %}?year={{ next_month.year }}&month={{ next_month.month }}" class="btn btn-primary">Next Month</a>
+        </div>
+    </div>
+    <div class="hero-aside">
+        <div class="profile-card">
+            <span class="mini-label">Viewing scope</span>
+            <strong>{% if request.user.is_superuser %}All approved leave{% else %}{{ employee.department.name|default:"No department assigned" }}{% endif %}</strong>
+            <p class="hero-copy">Only approved leave appears in this calendar so managers and employees can plan team availability quickly.</p>
+        </div>
+    </div>
+</section>
+
+{% if holiday_alerts %}
+<section class="holiday-alert-stack">
+    {% for alert in holiday_alerts %}
+    <article class="holiday-alert holiday-alert-{{ alert.level }}">
+        <span class="holiday-alert-label">{{ alert.title }}</span>
+        <p>{{ alert.message }}</p>
+    </article>
+    {% endfor %}
+</section>
+{% endif %}
+
+<section class="panel calendar-panel-page">
+    <div class="panel-head">
+        <h2>Monthly Schedule</h2>
+        <p>Each day cell lists approved leave entries that overlap with that calendar date.</p>
+    </div>
+    <div class="calendar-grid">
+        <div class="calendar-weekday">Mon</div>
+        <div class="calendar-weekday">Tue</div>
+        <div class="calendar-weekday">Wed</div>
+        <div class="calendar-weekday">Thu</div>
+        <div class="calendar-weekday">Fri</div>
+        <div class="calendar-weekday">Sat</div>
+        <div class="calendar-weekday">Sun</div>
+        {% for week in calendar_weeks %}
+            {% for day in week %}
+            <div class="calendar-day{% if not day.in_month %} calendar-day-muted{% endif %}{% if day.is_today %} calendar-day-today{% endif %}{% if day.is_weekend %} calendar-day-weekend{% endif %}{% if day.holiday %} calendar-day-holiday{% endif %}">
+                <div class="calendar-day-head">
+                    <strong>{{ day.date|date:"j" }}</strong>
+                    <span>{{ day.date|date:"D" }}</span>
+                </div>
+                {% if day.holiday or day.is_weekend %}
+                <div class="calendar-day-notes">
+                    {% if day.holiday %}
+                    <span class="calendar-note calendar-note-holiday">{{ day.holiday.name }}</span>
+                    {% endif %}
+                    {% if day.is_weekend %}
+                    <span class="calendar-note calendar-note-weekend">{{ day.weekend_label }}</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="calendar-day-items">
+                    {% for item in day.items %}
+                    <article class="calendar-entry">
+                        <strong>{{ item.employee.user.get_full_name|default:item.employee.user.username }}</strong>
+                        <span>{{ item.leave_type.name }}</span>
+                    </article>
+                    {% empty %}
+                    <span class="calendar-empty">No approved leave</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h2>Approved Leave List</h2>
+        <p>A simple reference list for the current month.</p>
+    </div>
+    <div class="calendar-list">
+        {% for item in month_requests %}
+        <div class="calendar-group">
+            <h3>{{ item.employee.user.get_full_name|default:item.employee.user.username }}</h3>
+            <div class="calendar-item">
+                <strong>{{ item.leave_type.name }}</strong>
+                <span>{{ item.start_date }} to {{ item.end_date }}</span>
+            </div>
+        </div>
+        {% empty %}
+        <p class="empty">No approved leave scheduled for this month.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
