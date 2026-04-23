@@ -1,0 +1,1156 @@
+{
+  "info": {
+    "_postman_id": "3c39060c-5960-43a7-bd37-c551f8edb3e7",
+    "name": "Employee Leave Management System API",
+    "description": "Postman collection for all demo employees, manager, and admin users in the Employee Leave Management System.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "poorni_username",
+      "value": "poorni@gmail.com"
+    },
+    {
+      "key": "poorni_password",
+      "value": "Demo@12345"
+    },
+    {
+      "key": "meera_username",
+      "value": "meera@gmail.com"
+    },
+    {
+      "key": "meera_password",
+      "value": "Demo@12345"
+    },
+    {
+      "key": "arjun_username",
+      "value": "arjun@gmail.com"
+    },
+    {
+      "key": "arjun_password",
+      "value": "Demo@12345"
+    },
+    {
+      "key": "kaviya_username",
+      "value": "kaviya@gmail.com"
+    },
+    {
+      "key": "kaviya_password",
+      "value": "Demo@12345"
+    },
+    {
+      "key": "manager_username",
+      "value": "nandhini.v.2367@gmail.com"
+    },
+    {
+      "key": "manager_password",
+      "value": "Demo@12345"
+    },
+    {
+      "key": "admin_username",
+      "value": "admin@leavehub.local"
+    },
+    {
+      "key": "admin_password",
+      "value": "Admin@12345"
+    },
+    {
+      "key": "leave_type_id",
+      "value": "1"
+    },
+    {
+      "key": "leave_request_id",
+      "value": "1"
+    },
+    {
+      "key": "approve_request_id",
+      "value": "1"
+    },
+    {
+      "key": "reject_request_id",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Poorni Employee APIs",
+      "item": [
+        {
+          "name": "Get Own Leave Requests",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{poorni_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{poorni_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Lists Poorni's own leave requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Apply For Leave",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{poorni_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{poorni_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"leave_type\": {{leave_type_id}},\n  \"start_date\": \"2026-05-20\",\n  \"end_date\": \"2026-05-21\",\n  \"reason\": \"Family function\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Creates a new leave request as Poorni."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Own Leave Request",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{poorni_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{poorni_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/leaves/{{leave_request_id}}/cancel/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                "{{leave_request_id}}",
+                "cancel",
+                ""
+              ]
+            },
+            "description": "Cancels Poorni's own leave request."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Leave Balances",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{poorni_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{poorni_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/balance/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "balance",
+                ""
+              ]
+            },
+            "description": "Lists Poorni's leave balances."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Meera Employee APIs",
+      "item": [
+        {
+          "name": "Get Own Leave Requests",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{meera_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{meera_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Lists Meera's own leave requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Apply For Leave",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{meera_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{meera_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"leave_type\": {{leave_type_id}},\n  \"start_date\": \"2026-05-25\",\n  \"end_date\": \"2026-05-27\",\n  \"reason\": \"Personal travel\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Creates a new leave request as Meera."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Own Leave Request",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{meera_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{meera_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/leaves/{{leave_request_id}}/cancel/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                "{{leave_request_id}}",
+                "cancel",
+                ""
+              ]
+            },
+            "description": "Cancels Meera's own leave request."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Leave Balances",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{meera_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{meera_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/balance/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "balance",
+                ""
+              ]
+            },
+            "description": "Lists Meera's leave balances."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Arjun Employee APIs",
+      "item": [
+        {
+          "name": "Get Own Leave Requests",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{arjun_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{arjun_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Lists Arjun's own leave requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Apply For Leave",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{arjun_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{arjun_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"leave_type\": {{leave_type_id}},\n  \"start_date\": \"2026-06-22\",\n  \"end_date\": \"2026-06-23\",\n  \"reason\": \"Personal work\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Creates a new leave request as Arjun."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Own Leave Request",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{arjun_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{arjun_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/leaves/{{leave_request_id}}/cancel/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                "{{leave_request_id}}",
+                "cancel",
+                ""
+              ]
+            },
+            "description": "Cancels Arjun's own leave request."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Leave Balances",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{arjun_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{arjun_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/balance/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "balance",
+                ""
+              ]
+            },
+            "description": "Lists Arjun's leave balances."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Kaviya Employee APIs",
+      "item": [
+        {
+          "name": "Get Own Leave Requests",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{kaviya_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{kaviya_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Lists Kaviya's own leave requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Apply For Leave",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{kaviya_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{kaviya_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"leave_type\": {{leave_type_id}},\n  \"start_date\": \"2026-07-15\",\n  \"end_date\": \"2026-07-16\",\n  \"reason\": \"Family event\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Creates a new leave request as Kaviya."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Own Leave Request",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{kaviya_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{kaviya_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/leaves/{{leave_request_id}}/cancel/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                "{{leave_request_id}}",
+                "cancel",
+                ""
+              ]
+            },
+            "description": "Cancels Kaviya's own leave request."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Leave Balances",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{kaviya_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{kaviya_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/balance/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "balance",
+                ""
+              ]
+            },
+            "description": "Lists Kaviya's leave balances."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Manager APIs",
+      "item": [
+        {
+          "name": "Get Own Leave Requests",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{manager_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{manager_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Lists the manager's own leave requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Own Leave Balances",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{manager_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{manager_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/balance/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "balance",
+                ""
+              ]
+            },
+            "description": "Lists the manager's own leave balances."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pending Department Requests",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{manager_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{manager_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/manager/pending/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "pending",
+                ""
+              ]
+            },
+            "description": "Lists pending requests from the manager's department."
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Leave Request",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{manager_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{manager_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"manager_note\": \"Approved. Please ensure handover is completed.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/manager/{{approve_request_id}}/approve/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "{{approve_request_id}}",
+                "approve",
+                ""
+              ]
+            },
+            "description": "Approves a pending leave request as manager."
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Leave Request",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{manager_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{manager_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rejection_reason\": \"Department coverage is not available for those dates.\",\n  \"manager_note\": \"Please choose alternate dates.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/manager/{{reject_request_id}}/reject/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "{{reject_request_id}}",
+                "reject",
+                ""
+              ]
+            },
+            "description": "Rejects a pending leave request as manager."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin APIs",
+      "item": [
+        {
+          "name": "Get Own Leave Requests",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{admin_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{admin_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/leaves/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "leaves",
+                ""
+              ]
+            },
+            "description": "Lists the admin user's own leave requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Own Leave Balances",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{admin_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{admin_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/balance/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "balance",
+                ""
+              ]
+            },
+            "description": "Lists the admin user's own leave balances."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Pending Requests",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{admin_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{admin_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/manager/pending/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "pending",
+                ""
+              ]
+            },
+            "description": "Lists all pending leave requests visible to the superuser."
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Leave Request",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{admin_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{admin_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"manager_note\": \"Approved by admin.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/manager/{{approve_request_id}}/approve/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "{{approve_request_id}}",
+                "approve",
+                ""
+              ]
+            },
+            "description": "Approves a pending leave request as admin."
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Leave Request",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{admin_username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{admin_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rejection_reason\": \"Rejected by admin due to scheduling constraints.\",\n  \"manager_note\": \"Please reapply with alternate dates.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/manager/{{reject_request_id}}/reject/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "manager",
+                "{{reject_request_id}}",
+                "reject",
+                ""
+              ]
+            },
+            "description": "Rejects a pending leave request as admin."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
